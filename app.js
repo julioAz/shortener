@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Url = require('./models/urlModel');
 const app = express();
-const PORT = 7000;
+const PORT = 10000;
 const MONGOURL = 'mongodb+srv://azevedodeveloper:ffHiNF2w5Jd1vzgy@clustershortener.x6bgr.mongodb.net/?retryWrites=true&w=majority&appName=clusterShortener'
 
 //Function to connect to the MongoDB Atlas Database
