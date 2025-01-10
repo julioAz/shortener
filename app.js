@@ -28,14 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
-app.get('/', async (req, res) => {
-  try {
-    const urls = await Url.find();
-    res.render('index', { urls });
-  } catch (error) {
-    res.status(500).send('Interval server error')
-  }
-});
+app.use(express.static(__dirname + '/public'));
 
 app.get('/:shortUrl', async (req, res) => {
   try {
