@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Url = require('./models/urlModel');
 const app = express();
 const PORT = 10000;
+var cors = require('cors');
 const MONGOURL = 'mongodb+srv://azevedodeveloper:ffHiNF2w5Jd1vzgy@clustershortener.x6bgr.mongodb.net/?retryWrites=true&w=majority&appName=clusterShortener'
 
 //Function to connect to the MongoDB Atlas Database
@@ -20,8 +21,9 @@ const connectDB = async () => {
 // Execute the connection to mongoDB
 connectDB();
 
-// Set EJS as the view engine
-app.set('view engine', 'ejs');
+app.use(cors({
+    origin: 'http://localhost:3000'
+}));
 
 // Middleware for handling JSON, URL-encoded data, and serving static files
 app.use(express.json());
@@ -46,7 +48,7 @@ app.get('/:shortUrl', async (req, res) => {
   }
 });
 
-app.post('/shorten', async (req, res) => {
+app.post('/shorten', cors(), async (req, res) => {
   try {
     const url = new Url({ fullUrl: req.body.fullUrl });
     await url.save();
