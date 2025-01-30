@@ -22,7 +22,9 @@ const connectDB = async () => {
 connectDB();
 
 app.use(cors({
-    origin: 'http://localhost:3000'
+  origin: 'http://localhost:3000', // Altere para a URL do seu front-end
+  methods: ['POST', 'GET'],
+  allowedHeaders: ['Content-Type']
 }));
 
 // Middleware for handling JSON, URL-encoded data, and serving static files
@@ -52,9 +54,9 @@ app.post('/shorten', cors(), async (req, res) => {
   try {
     const url = new Url({ fullUrl: req.body.fullUrl });
     await url.save();
-    res.redirect('/');
+    res.json({ message: "URL encurtada com sucesso!" });
   } catch (error) {
-    res.status(500).send('Invalid URL');
+    res.status(500).send(`Invalid URL: ${req.body.fullUrl}`);
   }
 });
 

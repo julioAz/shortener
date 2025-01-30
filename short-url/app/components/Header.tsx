@@ -10,9 +10,10 @@ const Header = () => {
 
   const shortUrl = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    alert(url)
     try {
       const response = await axios.post("http://localhost:10000/shorten", {
-        url, // Envia a URL capturada
+        fullUrl: url, // Envia a URL capturada
       });
       console.log("Resposta do servidor:", response.data);
     } catch (error) {
