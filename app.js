@@ -5,6 +5,7 @@ const app = express();
 const PORT = 10000;
 var cors = require('cors');
 const MONGOURL = 'mongodb+srv://azevedodeveloper:ffHiNF2w5Jd1vzgy@clustershortener.x6bgr.mongodb.net/?retryWrites=true&w=majority&appName=clusterShortener'
+const CUSTOM_DOMAIN = "http://localhost:10000";
 
 //Function to connect to the MongoDB Atlas Database
 const connectDB = async () => {
@@ -37,13 +38,15 @@ app.use(express.static(__dirname + '/public'));
 app.get('/:shortUrl', async (req, res) => {
   try {
     const shortUrl = req.params.shortUrl;
-    const url = await Url.find({ shortUrl })
+    const url = await Url.findOne({ shortUrl }); // Use findOne para obter um único objeto
+
     if (!url) {
-      return res.status(400).send('URL not found');
+      return res.status(404).send('URL not found');
     }
-    // Increment the click count and save the updated URL
+
     url.clicks++;
-    url.save();
+    await url.save(); // Use await para garantir que a atualização seja salva
+
     res.redirect(url.fullUrl);
   } catch (error) {
     res.status(500).send('URL not found');
@@ -54,13 +57,14 @@ app.post('/shorten', cors(), async (req, res) => {
   try {
     const url = new Url({ fullUrl: req.body.fullUrl });
     await url.save();
-    res.json({ message: "URL encurtada com sucesso!" });
+
+    // Retorna a URL encurtada com o domínio personalizado
+    res.json({ shortUrl: `${CUSTOM_DOMAIN}/${url.shortUrl}` });
   } catch (error) {
-    res.status(500).send(`Invalid URL: ${req.body.fullUrl}`);
+    res.status(500).send(`Invalid URL: ${req.body.fullUrl} ${error}`);
   }
 });
 
-// start the server and listen on PORT 7000
 app.listen(process.env.PORT || PORT, () => {
-  console.log(`App running on port ${PORT}...`);
+  console.log(`App running on port ${process.env.PORT || PORT}...`);
 });
